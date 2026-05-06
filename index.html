@@ -2,74 +2,91 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<title>Photobooth Capybara STEAM 2026</title>
+<title>Photobooth Capybara Pro</title>
 
 <style>
-body {
+body{
     margin:0;
-    font-family: Arial;
-    background: #fceff9;
+    font-family:'Comic Sans MS', cursive;
+    background: linear-gradient(135deg,#ffd6ec,#d6f0ff);
     display:flex;
     justify-content:center;
     align-items:center;
     height:100vh;
 }
 
-.container {
+.container{
     display:flex;
     gap:20px;
 }
 
-video {
-    width:400px;
-    border-radius:20px;
-    border:5px solid #333;
+/* VIDEO */
+video{
+    width:420px;
+    border-radius:25px;
+    border:6px solid white;
+    box-shadow:0 0 20px rgba(0,0,0,0.2);
 }
 
-.controls {
-    text-align:center;
-}
-
-button {
-    padding:10px 20px;
-    margin:10px;
-    border:none;
-    border-radius:10px;
-    background:#ff69b4;
-    color:white;
-    cursor:pointer;
-    font-size:16px;
-}
-
-select {
-    padding:5px;
-}
-
-#countdown {
-    position:absolute;
-    font-size:100px;
-    color:white;
-    text-shadow:0 0 10px black;
-}
-
-.strip {
-    width:220px;
+/* STRIP */
+.strip{
+    width:240px;
+    border-radius:25px;
     padding:10px;
-    border-radius:20px;
     background:white;
     text-align:center;
+    position:relative;
 }
 
-.photo {
+.photo{
     width:100%;
     margin:5px 0;
+    border-radius:12px;
+}
+
+/* COUNTDOWN */
+#countdown{
+    position:absolute;
+    font-size:120px;
+    color:white;
+    font-weight:bold;
+    text-shadow:0 0 20px black;
+    animation: pop 1s ease;
+}
+
+@keyframes pop{
+    0%{transform:scale(0.5);opacity:0;}
+    100%{transform:scale(1);opacity:1;}
+}
+
+/* BUTTON */
+button{
+    padding:10px 18px;
+    border:none;
+    border-radius:15px;
+    background:#ff8ec7;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+    margin:5px;
+}
+
+select{
+    padding:5px;
     border-radius:10px;
 }
 
-canvas {
-    display:none;
+/* STICKERS */
+.sticker{
+    position:absolute;
+    width:60px;
+    cursor:grab;
 }
 
+/* PANEL */
+.controls{
+    text-align:center;
+}
 </style>
 </head>
 
@@ -84,150 +101,180 @@ canvas {
     <div class="controls">
         <button onclick="startCapture()">START 📸</button><br>
 
-        Frame:
+        🎨 Frame:
         <select id="frameColor">
-            <option value="#ffffff">Putih</option>
+            <option value="#fff">Putih</option>
             <option value="#ffd1dc">Pink</option>
             <option value="#d1f0ff">Biru</option>
             <option value="#d1ffd6">Hijau</option>
             <option value="#fff0b3">Kuning</option>
+            <option value="#f3d1ff">Ungu</option>
+            <option value="#ffe4c4">Peach</option>
+            <option value="#c4fff9">Mint</option>
+            <option value="#ffc4c4">Soft Red</option>
+            <option value="#e0e0e0">Grey</option>
         </select>
+
+        <br>
+
+        🧵 Pattern:
+        <select id="pattern">
+            <option value="none">None</option>
+            <option value="dots">Dots</option>
+            <option value="stripes">Stripes</option>
+        </select>
+
+        <br>
+
+        🐹 Sticker:
+        <button onclick="addSticker()">Tambah</button>
+
+        <br>
+        <button onclick="downloadStrip()">Download PNG</button>
     </div>
 </div>
 
 <div class="strip" id="strip">
-    <h3>Pameran STEAM 2026</h3>
-    <img src="https://i.imgur.com/4AiXzf8.png" width="60">
+    <h3>🐹 Pameran STEAM 2026</h3>
     <div id="photos"></div>
 </div>
 
 </div>
 
-<canvas id="canvas"></canvas>
-
+<canvas id="canvas" style="display:none"></canvas>
 <audio id="shutter" src="https://www.soundjay.com/camera/camera-shutter-click-01.mp3"></audio>
 
 <script>
-
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const photosDiv = document.getElementById("photos");
 const countdownEl = document.getElementById("countdown");
+const strip = document.getElementById("strip");
 const shutter = document.getElementById("shutter");
 
-let photos = [];
+let photos=[];
 
-// Webcam
-navigator.mediaDevices.getUserMedia({ video:true })
-.then(stream => video.srcObject = stream);
+/* WEBCAM */
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>video.srcObject=stream);
 
-// Capture process
-async function startCapture() {
-    photos = [];
-    photosDiv.innerHTML = "";
-
-    for(let i=0;i<4;i++) {
+/* CAPTURE */
+async function startCapture(){
+    photos=[];
+    photosDiv.innerHTML="";
+    for(let i=0;i<4;i++){
         await countdown(3);
         takePhoto();
         await sleep(500);
     }
 }
 
-// Countdown
-function countdown(seconds) {
+/* COUNTDOWN */
+function countdown(sec){
     return new Promise(resolve=>{
-        let count = seconds;
-        countdownEl.innerText = count;
-
-        let interval = setInterval(()=>{
+        let count=sec;
+        countdownEl.innerText=count;
+        let int=setInterval(()=>{
             count--;
             if(count<=0){
-                clearInterval(interval);
-                countdownEl.innerText = "";
+                clearInterval(int);
+                countdownEl.innerText="";
                 resolve();
-            } else {
-                countdownEl.innerText = count;
+            }else{
+                countdownEl.innerText=count;
             }
         },1000);
     });
 }
 
-// Take photo
-function takePhoto() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+/* TAKE PHOTO */
+function takePhoto(){
+    canvas.width=video.videoWidth;
+    canvas.height=video.videoHeight;
 
     ctx.drawImage(video,0,0);
+    let data=canvas.toDataURL("image/png");
 
-    let data = canvas.toDataURL("image/png");
     photos.push(data);
 
+    shutter.currentTime=0;
     shutter.play();
 
-    let img = document.createElement("img");
-    img.src = data;
-    img.className = "photo";
-
+    let img=document.createElement("img");
+    img.src=data;
+    img.className="photo";
     photosDiv.appendChild(img);
 }
 
-// Download strip
-function downloadStrip() {
+/* STICKER */
+function addSticker(){
+    let s=document.createElement("img");
+    s.src="https://i.imgur.com/4AiXzf8.png";
+    s.className="sticker";
+    s.style.top="50px";
+    s.style.left="50px";
 
-    let stripCanvas = document.createElement("canvas");
-    let sctx = stripCanvas.getContext("2d");
+    strip.appendChild(s);
 
-    let width = 400;
-    let height = 1200;
+    dragElement(s);
+}
 
-    stripCanvas.width = width;
-    stripCanvas.height = height;
-
-    let frameColor = document.getElementById("frameColor").value;
-
-    sctx.fillStyle = frameColor;
-    sctx.fillRect(0,0,width,height);
-
-    let y = 50;
-
-    photos.forEach(p=>{
-        let img = new Image();
-        img.src = p;
-
-        img.onload = ()=>{
-            sctx.drawImage(img,50,y,300,200);
+/* DRAG */
+function dragElement(el){
+    el.onmousedown=function(e){
+        e.preventDefault();
+        document.onmousemove=function(e){
+            el.style.top=(el.offsetTop + e.movementY)+"px";
+            el.style.left=(el.offsetLeft + e.movementX)+"px";
         }
+        document.onmouseup=function(){
+            document.onmousemove=null;
+        }
+    }
+}
 
-        y += 250;
+/* DOWNLOAD */
+function downloadStrip(){
+    let c=document.createElement("canvas");
+    let cx=c.getContext("2d");
+
+    c.width=400;
+    c.height=1200;
+
+    let color=document.getElementById("frameColor").value;
+    cx.fillStyle=color;
+    cx.fillRect(0,0,c.width,c.height);
+
+    let y=50;
+
+    photos.forEach((p,i)=>{
+        let img=new Image();
+        img.src=p;
+        img.onload=()=>{
+            cx.drawImage(img,50,y,300,200);
+        }
+        y+=250;
     });
 
-    // text
-    sctx.fillStyle="black";
-    sctx.font="30px Arial";
-    sctx.fillText("Pameran STEAM 2026",50,height-50);
+    cx.fillStyle="black";
+    cx.font="28px Comic Sans MS";
+    cx.fillText("Pameran STEAM 2026",40,1150);
 
-    // download
-    let link = document.createElement("a");
-    link.download = "photostrip.png";
-    link.href = stripCanvas.toDataURL();
+    let link=document.createElement("a");
+    link.download="photobooth.png";
+    link.href=c.toDataURL();
     link.click();
 }
 
-// Add download button
-let btn = document.createElement("button");
-btn.innerText = "Download";
-btn.onclick = downloadStrip;
-document.querySelector(".controls").appendChild(btn);
-
-// Sleep
+/* SLEEP */
 function sleep(ms){
     return new Promise(r=>setTimeout(r,ms));
 }
-
 </script>
 
 </body>
 </html>
+
 
 
