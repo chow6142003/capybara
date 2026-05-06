@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Photobooth STEAM 2026</title>
+<title>STEAM Exhibition 2026 Photobooth</title>
 
 <style>
 body{
     margin:0;
     font-family:Arial;
-    background:linear-gradient(135deg,#ffe0f0,#e0f7ff);
+    background:linear-gradient(135deg,#ffe6f0,#e6f7ff);
     display:flex;
     justify-content:center;
     align-items:center;
@@ -20,24 +20,22 @@ body{
     gap:20px;
 }
 
-/* VIDEO */
+/* CAMERA */
 video{
     width:420px;
     border-radius:20px;
     border:5px solid #333;
 }
 
-/* STRIP */
+/* PHOTOSTRIP */
 .strip{
     width:240px;
-    background:white;
-    padding:10px;
     border-radius:20px;
+    padding:10px;
     text-align:center;
-    position:relative;
+    transition:0.3s;
 }
 
-/* PHOTOS */
 .photo{
     width:100%;
     margin:6px 0;
@@ -51,20 +49,20 @@ video{
     color:white;
     font-weight:bold;
     text-shadow:0 0 20px black;
-    animation: pop 1s ease;
+    animation: pop 0.8s ease;
 }
 
 @keyframes pop{
-    0%{transform:scale(0.3);opacity:0;}
+    0%{transform:scale(0.4);opacity:0;}
     100%{transform:scale(1);opacity:1;}
 }
 
-/* BUTTON */
+/* UI */
 button{
     padding:10px 20px;
     margin:5px;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
     background:#ff6fa5;
     color:white;
     cursor:pointer;
@@ -73,12 +71,6 @@ button{
 select{
     padding:5px;
     border-radius:8px;
-}
-
-/* STICKERS */
-.sticker{
-    width:60px;
-    position:absolute;
 }
 
 .controls{
@@ -98,13 +90,14 @@ select{
     <div class="controls">
         <button onclick="startCapture()">START 📸</button><br>
 
-        Frame:
-        <select id="frameColor">
+        Frame Color:
+        <select id="frameColor" onchange="updateFrame()">
             <option value="#ffffff">White</option>
             <option value="#ffd1dc">Pink</option>
             <option value="#d1f0ff">Blue</option>
             <option value="#d1ffd6">Green</option>
             <option value="#fff0b3">Yellow</option>
+            <option value="#e6ccff">Purple</option>
         </select>
 
         <br>
@@ -115,11 +108,6 @@ select{
 <!-- PHOTOSTRIP -->
 <div class="strip" id="strip">
     <h3>STEAM Exhibition 2026</h3>
-
-    <!-- Capybara Stickers -->
-    <img src="https://i.imgur.com/4AiXzf8.png" class="sticker" style="top:20px; left:10px;">
-    <img src="https://i.imgur.com/4AiXzf8.png" class="sticker" style="bottom:20px; right:10px;">
-
     <div id="photos"></div>
 </div>
 
@@ -135,13 +123,20 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const photosDiv = document.getElementById("photos");
 const countdownEl = document.getElementById("countdown");
+const strip = document.getElementById("strip");
 const shutter = document.getElementById("shutter");
 
 let photos = [];
 
-/* WEBCAM */
+/* INIT CAMERA */
 navigator.mediaDevices.getUserMedia({video:true})
 .then(stream => video.srcObject = stream);
+
+/* UPDATE FRAME COLOR LIVE */
+function updateFrame(){
+    let color = document.getElementById("frameColor").value;
+    strip.style.background = color;
+}
 
 /* START CAPTURE */
 async function startCapture(){
@@ -151,7 +146,7 @@ async function startCapture(){
     for(let i=0;i<4;i++){
         await countdown(3);
         takePhoto();
-        await sleep(500);
+        await sleep(400);
     }
 }
 
@@ -165,10 +160,13 @@ function countdown(sec){
             count--;
             if(count<=0){
                 clearInterval(interval);
-                countdownEl.innerText = "";
+                countdownEl.innerText="";
                 resolve();
             }else{
                 countdownEl.innerText = count;
+                countdownEl.style.animation="none";
+                countdownEl.offsetHeight;
+                countdownEl.style.animation="pop 0.8s ease";
             }
         },1000);
     });
@@ -190,10 +188,11 @@ function takePhoto(){
     let img = document.createElement("img");
     img.src = data;
     img.className = "photo";
+
     photosDiv.appendChild(img);
 }
 
-/* DOWNLOAD */
+/* DOWNLOAD PNG */
 function downloadStrip(){
     let c = document.createElement("canvas");
     let cx = c.getContext("2d");
@@ -206,72 +205,53 @@ function downloadStrip(){
 
     let frameColor = document.getElementById("frameColor").value;
 
-    // Background frame
+    // background frame
     cx.fillStyle = frameColor;
     cx.fillRect(0,0,width,height);
 
     let y = 50;
-
-    // Load all images properly before export
     let loaded = 0;
 
-    photos.forEach((p,index)=>{
+    if(photos.length === 0){
+        drawText();
+        return;
+    }
+
+    photos.forEach((p)=>{
         let img = new Image();
         img.src = p;
 
         img.onload = ()=>{
             cx.drawImage(img,50,y,300,200);
+            y += 250;
             loaded++;
 
             if(loaded === photos.length){
-                drawExtras(cx, width, height);
+                drawText();
             }
         }
-
-        y += 250;
     });
 
-    if(photos.length === 0){
-        drawExtras(cx, width, height);
-    }
-
-    function drawExtras(cx,w,h){
-        // TEXT
+    function drawText(){
         cx.fillStyle="black";
         cx.font="28px Arial";
-        cx.fillText("STEAM Exhibition 2026",40,h-40);
+        cx.fillText("STEAM Exhibition 2026",40,height-40);
 
-        // STICKERS
-        let sticker1 = new Image();
-        let sticker2 = new Image();
-
-        sticker1.src = "https://i.imgur.com/4AiXzf8.png";
-        sticker2.src = "https://i.imgur.com/4AiXzf8.png";
-
-        sticker1.onload = ()=>{
-            cx.drawImage(sticker1,10,10,80,80);
-
-            sticker2.onload = ()=>{
-                cx.drawImage(sticker2,w-90,h-120,80,80);
-
-                // DOWNLOAD AFTER EVERYTHING READY
-                let link = document.createElement("a");
-                link.download = "photostrip.png";
-                link.href = c.toDataURL();
-                link.click();
-            }
-        }
+        let link = document.createElement("a");
+        link.download = "photostrip.png";
+        link.href = c.toDataURL();
+        link.click();
     }
 }
 
-/* SLEEP */
+/* UTILITY */
 function sleep(ms){
     return new Promise(r=>setTimeout(r,ms));
 }
+
+/* DEFAULT FRAME */
+updateFrame();
 </script>
 
 </body>
 </html>
-
-
-
