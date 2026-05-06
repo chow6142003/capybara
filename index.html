@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<title>Capybara Photobooth Cute</title>
+
+<style>
+body {
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+    background: linear-gradient(to bottom, #ffe4ec, #e0f7ff);
+}
+
+/* video */
+video {
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* countdown */
+#countdown {
+    font-size: 100px;
+    color: #ff69b4;
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    display: none;
+    animation: pop 0.5s infinite alternate;
+}
+
+@keyframes pop {
+    from {transform: scale(1);}
+    to {transform: scale(1.3);}
+}
+
+/* buttons */
+button {
+    background: #ffb6c1;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+/* color circle */
+.color {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+/* pattern */
+.pattern {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+/* stickers */
+.sticker {
+    width: 45px;
+    margin: 4px;
+    cursor: pointer;
+}
+
+/* photostrip */
+.strip {
+    width: 220px;
+    background: white;
+    padding: 10px;
+    margin: auto;
+    border: 12px solid pink;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.photo {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🦫 Capybara Cute Photobooth</h2>
+
+<button onclick="startCamera()">Start Camera</button>
+<button onclick="startBooth()">Start Photobooth</button>
+
+<h3>🎨 Warna Frame</h3>
+<div id="colors"></div>
+
+<h3>🧩 Pattern Frame</h3>
+<div id="patterns"></div>
+
+<h3>🦫 Sticker</h3>
+<div id="stickers"></div>
+
+<div style="position:relative; display:inline-block;">
+    <video id="video" width="300" autoplay></video>
+    <div id="countdown">3</div>
+</div>
+
+<br><br>
+<div id="result"></div>
+
+<br>
+<button onclick="download()">Download</button>
+
+<audio id="snap" src="https://www.soundjay.com/camera/camera-click-01.mp3"></audio>
+
+<script>
+let video=document.getElementById("video");
+let countdown=document.getElementById("countdown");
+let snap=document.getElementById("snap");
+
+let photos=[];
+let color="pink";
+let pattern="";
+let sticker="https://i.imgur.com/6RLd1Xk.png";
+
+/* colors */
+let colors=["#ffb6c1","#ffd1dc","#c1f0f6","#fff0b3","#d9c2ff","#ffdac1","#b5ead7","#ff9aa2","#c7ceea","#f6eac2"];
+colors.forEach(c=>{
+    let d=document.createElement("div");
+    d.className="color";
+    d.style.background=c;
+    d.onclick=()=>color=c;
+    document.getElementById("colors").appendChild(d);
+});
+
+/* patterns */
+let patterns=[
+"radial-gradient(pink 10%, transparent 10%)",
+"repeating-linear-gradient(45deg, pink 0 10px, white 10px 20px)",
+"linear-gradient(90deg, #ffb6c1 50%, #fff 50%)",
+"polka-dot",
+"grid",
+"zigzag",
+"diagonal",
+"stripe",
+"dots",
+"checker"
+];
+
+patterns.forEach((p,i)=>{
+    let d=document.createElement("div");
+    d.className="pattern";
+    d.style.background=i<3?p:"#eee";
+    d.onclick=()=>pattern=p;
+    document.getElementById("patterns").appendChild(d);
+});
+
+/* 30 capybara stickers (cute png) */
+let stickerList=[
+"https://i.imgur.com/6RLd1Xk.png",
+"https://i.imgur.com/qV9YxZK.png",
+"https://i.imgur.com/7yUvePI.png",
+"https://i.imgur.com/QZ7Z6XG.png",
+"https://i.imgur.com/Jp8Yp3A.png",
+"https://i.imgur.com/4AiXzf8.png",
+"https://i.imgur.com/Y3nQF9G.png",
+"https://i.imgur.com/2RMz0fT.png",
+"https://i.imgur.com/b9r5sEL.png",
+"https://i.imgur.com/gk9yZ4k.png",
+"https://i.imgur.com/l49aYS3.png",
+"https://i.imgur.com/Z8hF3nT.png",
+"https://i.imgur.com/8RKXAIV.png",
+"https://i.imgur.com/vxXQ7bC.png",
+"https://i.imgur.com/L8sP3QX.png",
+"https://i.imgur.com/Fe4FZ6Z.png",
+"https://i.imgur.com/w1XQw1E.png",
+"https://i.imgur.com/N5uCbDu.png",
+"https://i.imgur.com/eJ3Q9pR.png",
+"https://i.imgur.com/0rVeh4A.png",
+"https://i.imgur.com/9V7Z6yV.png",
+"https://i.imgur.com/W4bKx2L.png",
+"https://i.imgur.com/f7XxYkD.png",
+"https://i.imgur.com/QX2YF9P.png",
+"https://i.imgur.com/k9vK3sA.png",
+"https://i.imgur.com/3x2p9zP.png",
+"https://i.imgur.com/4nXz7qA.png",
+"https://i.imgur.com/XZ7pF1Z.png",
+"https://i.imgur.com/d7r8VnM.png",
+"https://i.imgur.com/B8kF2Xp.png"
+];
+
+stickerList.forEach(s=>{
+    let img=document.createElement("img");
+    img.src=s;
+    img.className="sticker";
+    img.onclick=()=>sticker=s;
+    document.getElementById("stickers").appendChild(img);
+});
+
+/* camera */
+async function startCamera(){
+    let stream=await navigator.mediaDevices.getUserMedia({video:true});
+    video.srcObject=stream;
+}
+
+/* countdown */
+function count(n){
+return new Promise(res=>{
+    countdown.style.display="block";
+    let c=n;
+    let i=setInterval(()=>{
+        countdown.innerText=c;
+        c--;
+        if(c<0){
+            clearInterval(i);
+            countdown.style.display="none";
+            flash();
+            res();
+        }
+    },1000);
+});
+}
+
+/* flash */
+function flash(){
+    document.body.style.background="white";
+    setTimeout(()=>document.body.style.background="",100);
+}
+
+/* capture */
+function snapPhoto(){
+    let canvas=document.createElement("canvas");
+    canvas.width=300;
+    canvas.height=225;
+    let ctx=canvas.getContext("2d");
+
+    ctx.drawImage(video,0,0,300,225);
+
+    let img=new Image();
+    img.src=sticker;
+    ctx.drawImage(img,220,150,70,70);
+
+    photos.push(canvas.toDataURL());
+    snap.play();
+}
+
+/* start booth */
+async function startBooth(){
+    photos=[];
+    document.getElementById("result").innerHTML="";
+
+    for(let i=0;i<4;i++){
+        await count(3);
+        snapPhoto();
+    }
+
+    show();
+}
+
+/* display */
+function show(){
+    let strip=document.createElement("div");
+    strip.className="strip";
+    strip.style.borderColor=color;
+
+    photos.forEach(p=>{
+        let img=document.createElement("img");
+        img.src=p;
+        img.className="photo";
+        strip.appendChild(img);
+    });
+
+    let t=document.createElement("p");
+    t.innerHTML="<b>Pameran STEAM 2026</b>";
+    strip.appendChild(t);
+
+    document.getElementById("result").appendChild(strip);
+}
+
+/* download */
+function download(){
+    let canvas=document.createElement("canvas");
+    canvas.width=300;
+    canvas.height=1000;
+    let ctx=canvas.getContext("2d");
+
+    let y=0;
+
+    let loads=photos.map(s=>{
+        return new Promise(r=>{
+            let i=new Image();
+            i.src=s;
+            i.onload=()=>r(i);
+        });
+    });
+
+    Promise.all(loads).then(imgs=>{
+        imgs.forEach(i=>{
+            ctx.drawImage(i,0,y,300,225);
+            y+=240;
+        });
+
+        ctx.fillStyle="black";
+        ctx.font="20px Arial";
+        ctx.fillText("Pameran STEAM 2026",40,y+20);
+
+        let link=document.createElement("a");
+        link.download="cute_photobooth.png";
+        link.href=canvas.toDataURL();
+        link.click();
+    });
+}
+</script>
+
+</body>
+</html>
