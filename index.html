@@ -4,12 +4,11 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Capybara Photobooth - STEAM Exhibition 2026</title>
+<title>Capybara Photobooth</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -17,117 +16,75 @@
 }
 
 body{
-    font-family:'Fredoka', sans-serif;
-    background:
-    linear-gradient(135deg,#fff2f7,#e8f7ff,#fff6d6);
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#fff4dc,#ffe6f2,#e6f7ff);
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    overflow:hidden;
+    padding:20px;
 }
 
 /* MAIN LAYOUT */
-
 .container{
-    width:95%;
-    max-width:1400px;
     display:flex;
     gap:40px;
     align-items:center;
-    justify-content:center;
+    flex-wrap:wrap;
 }
 
-/* LEFT SIDE */
-
-.left-panel{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-}
-
-.camera-box{
+/* CAMERA SECTION */
+.camera-section{
+    background:white;
+    padding:20px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+    text-align:center;
+    width:500px;
     position:relative;
-    width:700px;
-    height:520px;
-    border-radius:30px;
-    overflow:hidden;
-    border:10px solid white;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-    background:#000;
+}
+
+h1{
+    font-family:'Pacifico', cursive;
+    color:#8b5e3c;
+    margin-bottom:15px;
+    font-size:34px;
 }
 
 video{
     width:100%;
-    height:100%;
-    object-fit:cover;
+    border-radius:20px;
+    border:8px solid #ffd59e;
     transform:scaleX(-1);
 }
 
 /* COUNTDOWN */
-
 #countdown{
     position:absolute;
-    top:50%;
+    top:45%;
     left:50%;
     transform:translate(-50%,-50%);
-    font-size:140px;
-    font-weight:700;
+    font-size:120px;
+    font-weight:bold;
     color:white;
     text-shadow:0 0 20px black;
     display:none;
     z-index:10;
 }
 
-/* CAMERA LABEL */
-
-.camera-label{
-    position:absolute;
-    top:20px;
-    left:20px;
-    background:rgba(255,255,255,0.85);
-    padding:10px 20px;
-    border-radius:20px;
-    font-size:20px;
-    font-weight:600;
-}
-
-/* CAPYBARA DECOR */
-
-.capybara{
-    position:absolute;
-    font-size:60px;
-    z-index:5;
-}
-
-.capy1{
-    bottom:10px;
-    left:15px;
-}
-
-.capy2{
-    bottom:10px;
-    right:15px;
-}
-
 /* BUTTONS */
-
 .controls{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:15px;
+    margin-top:20px;
 }
 
 button{
+    padding:12px 22px;
+    margin:5px;
     border:none;
-    border-radius:18px;
-    padding:14px 26px;
-    font-size:18px;
-    font-family:'Fredoka', sans-serif;
+    border-radius:15px;
     cursor:pointer;
-    font-weight:600;
+    font-size:16px;
+    font-weight:bold;
     transition:0.3s;
 }
 
@@ -135,156 +92,92 @@ button:hover{
     transform:scale(1.05);
 }
 
-.capture-btn{
-    background:#ff8fb1;
+#startBtn{
+    background:#ffb347;
     color:white;
 }
 
-.download-btn{
-    background:#7b8cff;
+#downloadBtn{
+    background:#6c63ff;
     color:white;
 }
 
-/* FRAME COLORS */
-
+/* COLOR CHOICES */
 .colors{
+    margin-top:15px;
     display:flex;
+    justify-content:center;
+    gap:10px;
     flex-wrap:wrap;
-    gap:12px;
-    justify-content:center;
-    max-width:500px;
 }
 
-.color{
-    width:42px;
-    height:42px;
+.color-btn{
+    width:35px;
+    height:35px;
     border-radius:50%;
+    border:3px solid white;
     cursor:pointer;
-    border:4px solid white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    box-shadow:0 0 5px rgba(0,0,0,0.3);
 }
 
-/* RIGHT SIDE PHOTO STRIP */
-
-.strip-container{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
+/* PHOTO STRIP */
+/* 13cm x 6cm */
 .photostrip{
-
     width:6cm;
-    height:15cm;
-
-    background:white;
-    border:14px solid #ffb6c1;
-
-    border-radius:30px;
+    height:13cm;
+    background:#ffb6c1;
+    border-radius:20px;
     padding:12px;
-
     display:flex;
     flex-direction:column;
     align-items:center;
-
-    gap:8px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,0.25);
-
+    justify-content:flex-start;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
     position:relative;
-}
-
-/* HEADER */
-
-.strip-header{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    margin-bottom:5px;
-}
-
-.logo{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    object-fit:cover;
-    border:2px solid white;
 }
 
 /* TITLE */
-
-.title{
+.strip-title{
+    font-family:'Pacifico', cursive;
+    font-size:20px;
+    color:white;
     text-align:center;
-    font-size:13px;
-    font-weight:700;
-    line-height:1.2;
+    margin-bottom:10px;
+    text-shadow:2px 2px 5px rgba(0,0,0,0.3);
 }
 
-/* PHOTO FRAMES */
-
-.photo{
+/* PHOTO FRAME */
+/* 3cm x 5.5cm */
+.photo-frame{
     width:3cm;
-    height:4cm;
-    border-radius:15px;
-    background:#f3f3f3;
+    height:5.5cm;
+    background:white;
+    border-radius:12px;
     overflow:hidden;
+    margin-bottom:8px;
     border:4px solid white;
-    position:relative;
 }
 
-.photo img{
+.photo-frame img{
     width:100%;
     height:100%;
     object-fit:cover;
+    transform:scaleX(-1);
 }
 
-/* PLACEHOLDER */
-
-.placeholder{
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:30px;
+/* CAPYBARA DECOR */
+.capy{
+    position:absolute;
+    bottom:5px;
+    font-size:32px;
 }
 
-/* FOOTER */
-
-.footer{
-    margin-top:auto;
-    font-size:12px;
-    font-weight:600;
-}
-
-/* FLASH EFFECT */
-
-.flash{
-    animation:flash 0.3s;
-}
-
-@keyframes flash{
-    0%{filter:brightness(3);}
-    100%{filter:brightness(1);}
-}
-
-/* MOBILE */
-
-@media(max-width:1100px){
-
+/* RESPONSIVE */
+@media(max-width:900px){
     .container{
         flex-direction:column;
     }
-
-    .camera-box{
-        width:95vw;
-        height:60vw;
-    }
-
 }
-
 </style>
 </head>
 
@@ -292,156 +185,109 @@ button:hover{
 
 <div class="container">
 
-    <!-- LEFT PANEL -->
+    <!-- CAMERA -->
+    <div class="camera-section">
 
-    <div class="left-panel">
+        <h1>Capybara Photobooth</h1>
 
-        <div class="camera-box">
+        <div id="countdown">3</div>
 
-            <div class="camera-label">
-                📷 Front Camera
-            </div>
+        <video id="video" autoplay playsinline></video>
 
-            <video id="video" autoplay playsinline></video>
-
-            <div id="countdown">3</div>
-
-            <div class="capybara capy1">🦫</div>
-            <div class="capybara capy2">🦫</div>
-
-        </div>
-
-        <!-- BUTTONS -->
+        <canvas id="canvas" style="display:none;"></canvas>
 
         <div class="controls">
-
-            <button class="capture-btn" onclick="startBooth()">
-                📸 Start Photobooth
-            </button>
-
-            <button class="download-btn" onclick="downloadStrip()">
-                ⬇ Download Strip
-            </button>
-
+            <button id="startBtn">📸 Start Photo Booth</button>
+            <button id="downloadBtn">⬇ Download Strip</button>
         </div>
 
-        <!-- COLORS -->
-
+        <!-- COLOR OPTIONS -->
         <div class="colors">
 
-            <div class="color" style="background:#ffb6c1" onclick="changeFrame('#ffb6c1')"></div>
-            <div class="color" style="background:#ffd166" onclick="changeFrame('#ffd166')"></div>
-            <div class="color" style="background:#95d5b2" onclick="changeFrame('#95d5b2')"></div>
-            <div class="color" style="background:#a0c4ff" onclick="changeFrame('#a0c4ff')"></div>
-            <div class="color" style="background:#cdb4db" onclick="changeFrame('#cdb4db')"></div>
-            <div class="color" style="background:#f4a261" onclick="changeFrame('#f4a261')"></div>
-            <div class="color" style="background:#ff87ab" onclick="changeFrame('#ff87ab')"></div>
-            <div class="color" style="background:#84dcc6" onclick="changeFrame('#84dcc6')"></div>
-            <div class="color" style="background:#bde0fe" onclick="changeFrame('#bde0fe')"></div>
-            <div class="color" style="background:#ffc8dd" onclick="changeFrame('#ffc8dd')"></div>
+            <div class="color-btn" style="background:red" data-color="red"></div>
+            <div class="color-btn" style="background:yellow" data-color="yellow"></div>
+            <div class="color-btn" style="background:green" data-color="green"></div>
+            <div class="color-btn" style="background:pink" data-color="pink"></div>
+            <div class="color-btn" style="background:purple" data-color="purple"></div>
+            <div class="color-btn" style="background:black" data-color="black"></div>
+            <div class="color-btn" style="background:orange" data-color="orange"></div>
+            <div class="color-btn" style="background:lightblue" data-color="lightblue"></div>
+            <div class="color-btn" style="background:maroon" data-color="maroon"></div>
 
         </div>
 
     </div>
 
     <!-- PHOTO STRIP -->
+    <div class="photostrip" id="photostrip">
 
-    <div class="strip-container">
-
-        <div class="photostrip" id="photostrip">
-
-            <!-- HEADER -->
-
-            <div class="strip-header">
-
-                <!-- REPLACE THIS IMAGE WITH SK MENUANG LOGO -->
-
-                <img
-                    class="logo"
-                    src="https://upload.wikimedia.org/wikipedia/commons/8/89/HD_transparent_picture.png"
-                    id="logo"
-                >
-
-                <div class="title">
-                    STEAM Exhibition 2026
-                </div>
-
-            </div>
-
-            <!-- PHOTOS -->
-
-            <div class="photo">
-                <img id="img0">
-                <div class="placeholder" id="ph0">🦫</div>
-            </div>
-
-            <div class="photo">
-                <img id="img1">
-                <div class="placeholder" id="ph1">🦫</div>
-            </div>
-
-            <div class="photo">
-                <img id="img2">
-                <div class="placeholder" id="ph2">🦫</div>
-            </div>
-
-            <div class="photo">
-                <img id="img3">
-                <div class="placeholder" id="ph3">🦫</div>
-            </div>
-
-            <div class="footer">
-                Cute Capybara Booth ✨
-            </div>
-
+        <div class="strip-title">
+            STEAM Exhibition 2026
         </div>
+
+        <div class="photo-frame">
+            <img id="photo0">
+        </div>
+
+        <div class="photo-frame">
+            <img id="photo1">
+        </div>
+
+        <div class="photo-frame">
+            <img id="photo2">
+        </div>
+
+        <div class="photo-frame">
+            <img id="photo3">
+        </div>
+
+        <div class="capy">🦫</div>
 
     </div>
 
 </div>
 
 <!-- CAMERA SOUND -->
-
-<audio id="snapSound">
-    <source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
+<audio id="cameraSound">
+<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3">
 </audio>
 
 <script>
 
-const video = document.getElementById("video");
-const countdown = document.getElementById("countdown");
-const snapSound = document.getElementById("snapSound");
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const countdown = document.getElementById('countdown');
+const startBtn = document.getElementById('startBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const strip = document.getElementById('photostrip');
+const sound = document.getElementById('cameraSound');
 
 let photos = [];
 
 /* START CAMERA */
-
 navigator.mediaDevices.getUserMedia({
-    video:{
-        facingMode:"user"
-    },
+    video:true,
     audio:false
 })
 .then(stream=>{
     video.srcObject = stream;
 });
 
-/* CHANGE FRAME */
-
-function changeFrame(color){
-    document.getElementById("photostrip").style.borderColor = color;
-}
+/* COLOR CHANGE */
+document.querySelectorAll('.color-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        strip.style.background = btn.dataset.color;
+    });
+});
 
 /* COUNTDOWN */
-
-function showCountdown(number){
-
+function startCountdown(){
     return new Promise(resolve=>{
 
-        countdown.style.display = "block";
-        countdown.innerText = number;
+        let count = 3;
 
-        let count = number;
+        countdown.style.display = 'block';
+        countdown.innerText = count;
 
         const interval = setInterval(()=>{
 
@@ -451,87 +297,61 @@ function showCountdown(number){
                 countdown.innerText = count;
             }else{
                 clearInterval(interval);
-                countdown.style.display = "none";
+                countdown.style.display = 'none';
                 resolve();
             }
 
         },1000);
 
     });
-
 }
 
 /* TAKE PHOTO */
-
 function takePhoto(index){
 
-    return new Promise(resolve=>{
+    const context = canvas.getContext('2d');
 
-        const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+    context.translate(canvas.width,0);
+    context.scale(-1,1);
 
-        const ctx = canvas.getContext("2d");
+    context.drawImage(video,0,0);
 
-        /* MIRROR */
+    const data = canvas.toDataURL('image/png');
 
-        ctx.translate(canvas.width,0);
-        ctx.scale(-1,1);
+    document.getElementById(`photo${index}`).src = data;
 
-        ctx.drawImage(video,0,0);
+    photos.push(data);
 
-        const data = canvas.toDataURL("image/png");
-
-        photos[index] = data;
-
-        document.getElementById("img"+index).src = data;
-
-        document.getElementById("ph"+index).style.display = "none";
-
-        snapSound.play();
-
-        video.classList.add("flash");
-
-        setTimeout(()=>{
-            video.classList.remove("flash");
-        },300);
-
-        resolve();
-
-    });
-
+    sound.play();
 }
 
-/* START PHOTOBOOTH */
-
-async function startBooth(){
+/* PHOTO SESSION */
+startBtn.addEventListener('click', async ()=>{
 
     photos = [];
 
     for(let i=0;i<4;i++){
 
-        await showCountdown(3);
+        await startCountdown();
 
-        await takePhoto(i);
+        takePhoto(i);
 
+        await new Promise(r=>setTimeout(r,700));
     }
 
-}
+});
 
-/* DOWNLOAD STRIP */
+/* DOWNLOAD */
+downloadBtn.addEventListener('click',()=>{
 
-function downloadStrip(){
+    html2canvas(strip).then(canvas=>{
 
-    const strip = document.getElementById("photostrip");
+        const link = document.createElement('a');
 
-    html2canvas(strip,{
-        scale:3
-    }).then(canvas=>{
-
-        const link = document.createElement("a");
-
-        link.download = "STEAM-Exhibition-2026-Capybara-Booth.png";
+        link.download = 'STEAM-Photostrip.png';
 
         link.href = canvas.toDataURL();
 
@@ -539,11 +359,9 @@ function downloadStrip(){
 
     });
 
-}
+});
 
 </script>
-
-<!-- HTML2CANVAS -->
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
