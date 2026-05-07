@@ -1,368 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STEAM Exhibition 2026 - Online Photo Booth</title>
 
-<title>Capybara Photobooth</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    font-family:Arial, sans-serif;
-    background:linear-gradient(135deg,#fff4dc,#ffe6f2,#e6f7ff);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-}
-
-/* MAIN LAYOUT */
-.container{
-    display:flex;
-    gap:40px;
-    align-items:center;
-    flex-wrap:wrap;
-}
-
-/* CAMERA SECTION */
-.camera-section{
-    background:white;
-    padding:20px;
-    border-radius:25px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);
-    text-align:center;
-    width:500px;
-    position:relative;
-}
-
-h1{
-    font-family:'Pacifico', cursive;
-    color:#8b5e3c;
-    margin-bottom:15px;
-    font-size:34px;
-}
-
-video{
-    width:100%;
-    border-radius:20px;
-    border:8px solid #ffd59e;
-    transform:scaleX(-1);
-}
-
-/* COUNTDOWN */
-#countdown{
-    position:absolute;
-    top:45%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    font-size:120px;
-    font-weight:bold;
-    color:white;
-    text-shadow:0 0 20px black;
-    display:none;
-    z-index:10;
-}
-
-/* BUTTONS */
-.controls{
-    margin-top:20px;
-}
-
-button{
-    padding:12px 22px;
-    margin:5px;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-    transition:0.3s;
-}
-
-button:hover{
-    transform:scale(1.05);
-}
-
-#startBtn{
-    background:#ffb347;
-    color:white;
-}
-
-#downloadBtn{
-    background:#6c63ff;
-    color:white;
-}
-
-/* COLOR CHOICES */
-.colors{
-    margin-top:15px;
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    flex-wrap:wrap;
-}
-
-.color-btn{
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    border:3px solid white;
-    cursor:pointer;
-    box-shadow:0 0 5px rgba(0,0,0,0.3);
-}
-
-/* PHOTO STRIP */
-/* 13cm x 6cm */
-.photostrip{
-    width:6cm;
-    height:13cm;
-    background:#ffb6c1;
-    border-radius:20px;
-    padding:12px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-    position:relative;
-}
-
-/* TITLE */
-.strip-title{
-    font-family:'Pacifico', cursive;
-    font-size:20px;
-    color:white;
-    text-align:center;
-    margin-bottom:10px;
-    text-shadow:2px 2px 5px rgba(0,0,0,0.3);
-}
-
-/* PHOTO FRAME */
-/* 3cm x 5.5cm */
-.photo-frame{
-    width:3cm;
-    height:5.5cm;
-    background:white;
-    border-radius:12px;
-    overflow:hidden;
-    margin-bottom:8px;
-    border:4px solid white;
-}
-
-.photo-frame img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transform:scaleX(-1);
-}
-
-/* CAPYBARA DECOR */
-.capy{
-    position:absolute;
-    bottom:5px;
-    font-size:32px;
-}
-
-/* RESPONSIVE */
-@media(max-width:900px){
-    .container{
-        flex-direction:column;
+  <style>
+    body{
+      margin:0;
+      padding:0;
+      font-family: Arial, sans-serif;
+      background:#f2f2f2;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      gap:30px;
     }
-}
-</style>
-</head>
 
+    .container{
+      display:flex;
+      gap:30px;
+      align-items:flex-start;
+    }
+
+    /* CAMERA SECTION */
+    .camera-box{
+      background:white;
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.2);
+      text-align:center;
+    }
+
+    video{
+      width:500px;
+      height:375px;
+      border-radius:15px;
+      object-fit:cover;
+      transform: scaleX(-1); /* Front Camera Mirror */
+      background:black;
+    }
+
+    .controls{
+      margin-top:15px;
+    }
+
+    button{
+      padding:12px 20px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:16px;
+      margin:5px;
+      background:#222;
+      color:white;
+    }
+
+    select{
+      padding:10px;
+      border-radius:10px;
+      font-size:16px;
+    }
+
+    #countdown{
+      font-size:80px;
+      color:red;
+      font-weight:bold;
+      margin-top:10px;
+      height:90px;
+    }
+
+    /* PHOTO STRIP */
+    .photo-strip{
+      width:240px; /* 6cm equivalent */
+      height:480px; /* 12cm equivalent */
+      border-radius:20px;
+      padding:15px;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .title{
+      font-family:"Bauhaus 93", cursive;
+      font-size:20px;
+      text-align:center;
+      margin-bottom:10px;
+      color:white;
+      text-shadow:2px 2px 4px black;
+    }
+
+    .frame{
+      width:120px;   /* 3cm equivalent */
+      height:240px;  /* 6cm equivalent */
+      background:white;
+      margin:5px 0;
+      border-radius:10px;
+      overflow:hidden;
+      border:4px solid white;
+    }
+
+    .frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    #downloadBtn{
+      margin-top:15px;
+      background:#0a84ff;
+    }
+  </style>
+</head>
 <body>
 
 <div class="container">
 
-    <!-- CAMERA -->
-    <div class="camera-section">
+  <!-- CAMERA -->
+  <div class="camera-box">
+    <video id="video" autoplay playsinline></video>
 
-        <h1>Capybara Photobooth</h1>
+    <div id="countdown"></div>
 
-        <div id="countdown">3</div>
+    <div class="controls">
+      <select id="bgColor">
+        <option value="red">Red</option>
+        <option value="yellow">Yellow</option>
+        <option value="green">Green</option>
+        <option value="lightgreen">Light Green</option>
+        <option value="pink">Pink</option>
+        <option value="purple">Purple</option>
+        <option value="black">Black</option>
+        <option value="orange">Orange</option>
+        <option value="darkblue">Dark Blue</option>
+        <option value="lightblue">Light Blue</option>
+        <option value="maroon">Maroon</option>
+      </select>
 
-        <video id="video" autoplay playsinline></video>
-
-        <canvas id="canvas" style="display:none;"></canvas>
-
-        <div class="controls">
-            <button id="startBtn">📸 Start Photo Booth</button>
-            <button id="downloadBtn">⬇ Download Strip</button>
-        </div>
-
-        <!-- COLOR OPTIONS -->
-        <div class="colors">
-
-            <div class="color-btn" style="background:red" data-color="red"></div>
-            <div class="color-btn" style="background:yellow" data-color="yellow"></div>
-            <div class="color-btn" style="background:green" data-color="green"></div>
-            <div class="color-btn" style="background:pink" data-color="pink"></div>
-            <div class="color-btn" style="background:purple" data-color="purple"></div>
-            <div class="color-btn" style="background:black" data-color="black"></div>
-            <div class="color-btn" style="background:orange" data-color="orange"></div>
-            <div class="color-btn" style="background:lightblue" data-color="lightblue"></div>
-            <div class="color-btn" style="background:maroon" data-color="maroon"></div>
-
-        </div>
-
+      <button onclick="startPhotoBooth()">Start Photo Booth</button>
+      <button id="downloadBtn" onclick="downloadStrip()">Download</button>
     </div>
+  </div>
 
-    <!-- PHOTO STRIP -->
-    <div class="photostrip" id="photostrip">
+  <!-- PHOTO STRIP -->
+  <div class="photo-strip" id="photoStrip">
+    <div class="title">STEAM Exhibition 2026</div>
 
-        <div class="strip-title">
-            STEAM Exhibition 2026
-        </div>
-
-        <div class="photo-frame">
-            <img id="photo0">
-        </div>
-
-        <div class="photo-frame">
-            <img id="photo1">
-        </div>
-
-        <div class="photo-frame">
-            <img id="photo2">
-        </div>
-
-        <div class="photo-frame">
-            <img id="photo3">
-        </div>
-
-        <div class="capy">🦫</div>
-
-    </div>
+    <div class="frame"><img id="photo1"></div>
+    <div class="frame"><img id="photo2"></div>
+    <div class="frame"><img id="photo3"></div>
+    <div class="frame"><img id="photo4"></div>
+  </div>
 
 </div>
 
-<!-- CAMERA SOUND -->
-<audio id="cameraSound">
-<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3">
-</audio>
+<canvas id="canvas" width="500" height="375" style="display:none;"></canvas>
 
 <script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const countdown = document.getElementById('countdown');
 
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const countdown = document.getElementById('countdown');
-const startBtn = document.getElementById('startBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const strip = document.getElementById('photostrip');
-const sound = document.getElementById('cameraSound');
+  const frames = [
+    document.getElementById('photo1'),
+    document.getElementById('photo2'),
+    document.getElementById('photo3'),
+    document.getElementById('photo4')
+  ];
 
-let photos = [];
+  // START FRONT CAMERA
+  async function startCamera(){
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video:{
+          facingMode:"user"
+        },
+        audio:false
+      });
 
-/* START CAMERA */
-navigator.mediaDevices.getUserMedia({
-    video:true,
-    audio:false
-})
-.then(stream=>{
-    video.srcObject = stream;
-});
+      video.srcObject = stream;
+    }catch(error){
+      alert("Camera access denied!");
+      console.error(error);
+    }
+  }
 
-/* COLOR CHANGE */
-document.querySelectorAll('.color-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        strip.style.background = btn.dataset.color;
+  startCamera();
+
+  // CHANGE PHOTO STRIP COLOR
+  document.getElementById('bgColor').addEventListener('change', function(){
+    document.getElementById('photoStrip').style.background = this.value;
+  });
+
+  document.getElementById('photoStrip').style.background = "red";
+
+  // COUNTDOWN FUNCTION
+  function countdownTimer(seconds){
+    return new Promise((resolve)=>{
+      let counter = seconds;
+
+      countdown.innerHTML = counter;
+
+      const interval = setInterval(()=>{
+        counter--;
+        countdown.innerHTML = counter;
+
+        if(counter <= 0){
+          clearInterval(interval);
+          countdown.innerHTML = "";
+          resolve();
+        }
+      },1000);
     });
-});
+  }
 
-/* COUNTDOWN */
-function startCountdown(){
-    return new Promise(resolve=>{
+  // TAKE PHOTO
+  async function capturePhoto(index){
 
-        let count = 3;
+    await countdownTimer(3);
 
-        countdown.style.display = 'block';
-        countdown.innerText = count;
+    ctx.save();
 
-        const interval = setInterval(()=>{
+    // Mirror image correctly
+    ctx.translate(canvas.width,0);
+    ctx.scale(-1,1);
 
-            count--;
+    ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-            if(count > 0){
-                countdown.innerText = count;
-            }else{
-                clearInterval(interval);
-                countdown.style.display = 'none';
-                resolve();
-            }
+    ctx.restore();
 
-        },1000);
+    const imageData = canvas.toDataURL("image/png");
+    frames[index].src = imageData;
+  }
 
-    });
-}
+  // START PHOTO BOOTH
+  async function startPhotoBooth(){
 
-/* TAKE PHOTO */
-function takePhoto(index){
-
-    const context = canvas.getContext('2d');
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    context.translate(canvas.width,0);
-    context.scale(-1,1);
-
-    context.drawImage(video,0,0);
-
-    const data = canvas.toDataURL('image/png');
-
-    document.getElementById(`photo${index}`).src = data;
-
-    photos.push(data);
-
-    sound.play();
-}
-
-/* PHOTO SESSION */
-startBtn.addEventListener('click', async ()=>{
-
-    photos = [];
-
-    for(let i=0;i<4;i++){
-
-        await startCountdown();
-
-        takePhoto(i);
-
-        await new Promise(r=>setTimeout(r,700));
+    for(let i=0; i<4; i++){
+      await capturePhoto(i);
     }
 
-});
+    alert("Photo Strip Completed!");
+  }
 
-/* DOWNLOAD */
-downloadBtn.addEventListener('click',()=>{
+  // DOWNLOAD PHOTO STRIP
+  function downloadStrip(){
 
-    html2canvas(strip).then(canvas=>{
+    html2canvas(document.getElementById('photoStrip')).then(canvas=>{
 
-        const link = document.createElement('a');
-
-        link.download = 'STEAM-Photostrip.png';
-
-        link.href = canvas.toDataURL();
-
-        link.click();
+      const link = document.createElement('a');
+      link.download = 'STEAM-Exhibition-2026-PhotoStrip.png';
+      link.href = canvas.toDataURL();
+      link.click();
 
     });
-
-});
-
+  }
 </script>
 
+<!-- html2canvas Library -->
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 </body>
